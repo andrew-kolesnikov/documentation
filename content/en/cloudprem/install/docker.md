@@ -45,7 +45,6 @@ Export your Datadog credentials as environment variables:
 ```shell
 export DD_SITE="datadoghq.com"  # or your specific Datadog site
 export DD_API_KEY="your_datadog_api_key"
-export DD_APP_KEY="your_datadog_application_key"
 ```
 
 ### Step 1: Start CloudPrem
@@ -57,11 +56,8 @@ Create the data directory and start the CloudPrem container:
 docker run -d \
   --name cloudprem \
   -v $(pwd)/qwdata:/quickwit/qwdata \
-  -e QW_CLUSTER_ID=local-cloudprem \
-  -e QW_ENABLE_REVERSE_CONNECTION=true \
-  -e DD_SITE=${DD_SITE} \
-  -e DD_API_KEY=${DD_API_KEY} \
-  -e DD_APP_KEY=${DD_APP_KEY} \
+  -e DD_SITE=datad0g.com \
+  -e DD_API_KEY=XXXXXXXXXXXXXXX \
   -p 127.0.0.1:7280:7280 \
   datadog/cloudprem run
 ```
@@ -105,14 +101,10 @@ services:
     ports:
       - "127.0.0.1:7280:7280"
     environment:
-      - QW_CLUSTER_ID=cloudprem-local
-      - QW_ENABLE_REVERSE_CONNECTION
       - DD_SITE=${DD_SITE:-datadoghq.com}
-      - DD_API_KEY=${DD_API_KEY}
-      - DD_APP_KEY=${DD_APP_KEY}
+	    - DD_API_KEY=${DD_API_KEY}
     volumes:
       - ./qwdata:/quickwit/qwdata
-      - ./config.yaml:/quickwit/config/quickwit.yaml:ro
     restart: unless-stopped
 
   datadog-agent:
@@ -167,7 +159,7 @@ After starting CloudPrem with either method, verify that the installation is wor
 
 **Verify CloudPrem is running**:
 
-```bash
+```shell
 curl http://localhost:7280/api/v1/version
 ```
 
@@ -175,7 +167,11 @@ You should see a response with version information.
 
 ### Search your local logs from the Log Explorer
 
-Now that CloudPrem is running, you can search and analyze your logs in the Logs Explorer by searching into the `cloudprem` index!
+After verifying that CloudPrem is running, you can search and analyze your logs in the Logs Explorer by searching into the `cloudprem` index!
+
+## Further reading
+
+{{< partial name="whats-next/whats-next.html" >}}
 
 [1]: https://www.datadoghq.com/
 [2]: https://app.datadoghq.com/organization-settings/api-keys
