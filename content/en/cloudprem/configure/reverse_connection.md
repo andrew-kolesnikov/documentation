@@ -6,6 +6,12 @@ further_reading:
   text: "CloudPrem Installation Prerequisites"
 ---
 
+{{< callout btn_hidden="true" >}}
+  Datadog CloudPrem is in Preview.
+{{< /callout >}}
+
+## Overview
+
 The reverse connection allows your CloudPrem cluster to initiate the HTTP connection with Datadog using your API keys, without needing to set up a DNS entry and public ingress, so you don't have to expose CloudPrem to the internet. This is useful for environments with strict network policies or if you prefer to keep CloudPrem private.
 
 To activate the reverse connection, set the following values in your Helm chart:
@@ -19,3 +25,6 @@ config:
     dd_application_key: "${DD_APP_KEY}"
 ```
 
+## Further reading
+
+{{< partial name="whats-next/whats-next.html" >}}

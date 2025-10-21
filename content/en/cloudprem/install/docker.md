@@ -10,11 +10,12 @@ further_reading:
   text: "Configure CloudPrem"
 ---
 
-## Overview
 
 {{< callout btn_hidden="true" >}}
   Datadog CloudPrem is in Preview.
 {{< /callout >}}
+
+## Overview
 
 This guide walks you through setting up CloudPrem on your local machine for testing. YOu can use either standalone Docker containers or Docker Compose for a single-command setup.
 
@@ -22,26 +23,26 @@ This guide walks you through setting up CloudPrem on your local machine for test
 
 Before getting started with CloudPrem, ensure you have:
 
-- A **[Datadog account](https://www.datadoghq.com/)** with CloudPrem feature active.
-- **API credentials**: Have your [Datadog API key](https://app.datadoghq.com/organization-settings/api-keys) and [application key](https://app.datadoghq.com/organization-settings/application-keys) ready.
-- **Docker**: [Docker](https://docs.docker.com/get-docker/) installed and running on your machine.
-- **Docker Compose** (optional): [Docker Compose](https://docs.docker.com/compose/install/) for a single command line setup.
+- A **[Datadog account][1]** with CloudPrem feature active.
+- **API credentials**: Have your [Datadog API key][2] ready.
+- **Docker**: [Docker][4] installed and running on your machine.
+- **Docker Compose** (optional): [Docker Compose][5] for a single command line setup.
 
 ## Installation steps
 
 Choose one of the following installation methods:
 
-1. [Standalone Docker containers](#standalone-docker-setup) - Minimal setup for testing
-2. [Docker Compose](#docker-compose-setup) - Single command line to run CloudPrem and Datadog agent
+1. **Standalone Docker containers**: Minimal setup for testing
+2. **Docker Compose**: Single command line to run CloudPrem and Datadog agent
 
-## Standalone Docker setup
+{{< tabs >}}
+{{% tab "Standalone Docker setup" %}}
 
 This method uses individual Docker containers for a minimal CloudPrem setup.
 
-
 Export your Datadog credentials as environment variables:
 
-```bash
+```shell
 export DD_SITE="datadoghq.com"  # or your specific Datadog site
 export DD_API_KEY="your_datadog_api_key"
 export DD_APP_KEY="your_datadog_application_key"
@@ -51,7 +52,7 @@ export DD_APP_KEY="your_datadog_application_key"
 
 Create the data directory and start the CloudPrem container:
 
-```bash
+```shell
 # Start CloudPrem
 docker run -d \
   --name cloudprem \
@@ -69,7 +70,7 @@ docker run -d \
 
 To collect logs from your local containers and send them to CloudPrem, start the Datadog Agent:
 
-```bash
+```shell
 docker run \
   --name dd-agent \
   -e DD_API_KEY=${DD_API_KEY} \
@@ -86,8 +87,9 @@ docker run \
   -v /var/lib/docker/containers:/var/lib/docker/containers:ro \
   gcr.io/datadoghq/agent:latest
 ```
+{{% /tab %}}
 
-## Docker Compose setup
+{{% tab "Docker Compose setup" %}}
 
 This method provides a CloudPrem setup with the Datadog Agent integration.
 
@@ -136,25 +138,26 @@ services:
     restart: unless-stopped
 ```
 
-The Docker Compose setup will:
-1. Start CloudPrem and wait for it to be healthy
-2. Start the Datadog Agent to collect container logs
+The Docker Compose setup:
+1. Starts CloudPrem and waits for it to be healthy.
+2. Starts the Datadog Agent to collect container logs.
 
 ### Step 2: Set environment variables
 
 Create a `.env` file in the same directory:
 
-```bash
+```shell
 DD_SITE=datadoghq.com
 DD_API_KEY=your_datadog_api_key
-DD_APP_KEY=your_datadog_application_key
 ```
 
 ### Step 3: Start docker compose
 
-```bash
+```shell
 docker compose up -d
 ```
+{{% /tab %}}
+{{< /tabs >}}
 
 ## Next steps
 
@@ -174,4 +177,8 @@ You should see a response with version information.
 
 Now that CloudPrem is running, you can search and analyze your logs in the Logs Explorer by searching into the `cloudprem` index!
 
+[1]: https://www.datadoghq.com/
+[2]: https://app.datadoghq.com/organization-settings/api-keys
+[4]: https://docs.docker.com/get-docker/
+[5]: https://docs.docker.com/compose/install/
 
