@@ -17,13 +17,13 @@ further_reading:
 
 ## Overview
 
-This guide walks you through setting up CloudPrem on your local machine for testing. YOu can use either standalone Docker containers or Docker Compose for a single-command setup.
+This installation guide shows you how to run Datadog CloudPrem locally using either standalone Docker containers or Docker Compose. Follow these steps to deploy a minimal CloudPrem environment on your machine, ideal for exploring CloudPrem features and testing log ingestion with Datadog before deploying to production.
 
 ## Prerequisites
 
 Before getting started with CloudPrem, ensure you have:
 
-- A **[Datadog account][1]** with CloudPrem feature active.
+- A **Datadog account** with the CloudPrem feature enabled.
 - **API credentials**: Have your [Datadog API key][2] ready.
 - **Docker**: [Docker][4] installed and running on your machine.
 - **Docker Compose** (optional): [Docker Compose][5] for a single command line setup.

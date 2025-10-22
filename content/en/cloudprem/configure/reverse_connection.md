@@ -12,7 +12,7 @@ further_reading:
 
 ## Overview
 
-The reverse connection allows your CloudPrem cluster to initiate the HTTP connection with Datadog using your API keys, without needing to set up a DNS entry and public ingress, so you don't have to expose CloudPrem to the internet. This is useful for environments with strict network policies or if you prefer to keep CloudPrem private.
+Reverse connection lets your CloudPrem cluster initiate an HTTP connection with Datadog using your API keys, without requireing a DNS entry and public ingress. This setup keeps CloudPrem private and is useful for environments with strict network policies.
 
 To activate the reverse connection, set the following values in your Helm chart:
 
