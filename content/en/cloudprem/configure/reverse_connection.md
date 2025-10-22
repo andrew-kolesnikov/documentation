@@ -12,19 +12,34 @@ further_reading:
 
 ## Overview
 
-Reverse connection lets your CloudPrem cluster initiate an HTTP connection with Datadog using your API keys, without requireing a DNS entry and public ingress. This setup keeps CloudPrem private and is useful for environments with strict network policies.
+Reverse connection lets your CloudPrem cluster initiate an HTTP connection with Datadog using your API key, without requiring adding a DNS entry and public ingress. This setup is useful for environments with strict network policies which do not allows inbound requests.
 
-To activate the reverse connection, set the following values in your Helm chart:
+It the default setup for CloudPrem, it requires the following environment variables to be set:
+- `DD_API_KEY`
+- `DD_SITE` which defaults to `datadog.com`
 
-```yaml
-config:
-  cloudprem:
-    enable_reverse_connection: true
-    site: "datadoghq.com" # your site
-    dd_api_key: "${DD_API_KEY}"
-    dd_application_key: "${DD_APP_KEY}"
+## Helm chart configuration
+
+First create a secret to store the Datadog API key:
+```
+kubectl create secret generic datadog-secret --from-literal DD_API_KEY=<DATADOG_API_KEY>
 ```
 
-## Further reading
+To set
 
-{{< partial name="whats-next/whats-next.html" >}}
+```yaml
+environment:
+  DD_SITE: <DD_SITE>
+  secretRef:
+      name: datadog-secret
+```
+
+## Proxies
+
+You can configure CloudPrem to use a forward proxy, such as Squid, with the environment variable `HTTPS_PROXY`.
+
+```yaml
+environment:
+  HTTP_PROXY: <your HTTP proxy>
+
+```

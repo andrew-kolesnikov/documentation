@@ -92,10 +92,18 @@ echo ""
    kubectl create namespace <NAMESPACE_NAME>
    ```
 
-3. Store the PostgreSQL database connection string as a Kubernetes secret:
+3. Store your Datadog API key as a Kubernetes secret:
 
    ```shell
-   kubectl create secret generic <SECRET_NAME> \
+   kubectl create secret generic datadog-secret \
+   -n <NAMESPACE_NAME> \
+   --from-literal DD_API_KEY="<DD_API_KEY>"
+   ```
+
+4. Store the PostgreSQL database connection string and your Datadog API key as a Kubernetes secret:
+
+   ```shell
+   kubectl create secret generic cloudprem-metastore-uri \
    -n <NAMESPACE_NAME> \
    --from-literal QW_METASTORE_URI="postgres://<USERNAME>:<PASSWORD>@<ENDPOINT>:<PORT>/<DATABASE>"
    ```
@@ -121,6 +129,12 @@ echo ""
    # Any environment variables defined here are available to all pods in the deployment
    environment:
      AWS_REGION: us-east-1
+     DD_SITE: <DD_SITE>
+
+   # The Datadog API KEY is mounted into the pods using environmentFrom to reference the secret.
+   environmentFrom:
+     secretRef:
+       name: datadog-secret
 
    # Service account configuration
    # If `serviceAccount.create` is set to `true`, a service account is created with the specified name.
@@ -141,37 +155,11 @@ echo ""
      # All indexes created in CloudPrem are stored under this location.
      default_index_root_uri: s3://<BUCKET_NAME>/indexes
 
-    # Reverse connection configuration
-    # When enabled, CloudPrem initiates the connection to Datadog, eliminating the need for public ingress.
-    # This is useful for environments with strict network policies or when you prefer not to expose CloudPrem publicly.
-    # cloudprem:
-    #   enable_reverse_connection: true
-    #   site: "datadoghq.com"
-    #   dd_api_key: "${DD_API_KEY}"
-    #   dd_application_key: "${DD_APP_KEY}"
-
-
-   # Ingress configuration
-   # The chart supports two ingress configurations:
-   # 1. A public ingress for external access through the internet that will be used exclusively by Datadog's control plane and query service.
-   # 2. An internal ingress for access within the VPC
-   #
-   # Both ingresses provision an Application Load Balancers (ALBs) in AWS.
-   # The public ingress ALB is created in public subnets.
-   # The internal ingress ALB is created in private subnets.
+   # Internal ingress configuration for access within the VPC
+   # The ingress provisions an Application Load Balancers (ALBs) in AWS which is created in private subnets.
    #
    # Additional annotations can be added to customize the ALB behavior.
    ingress:
-     # The public ingress is configured to only accept TLS traffic and requires mutual TLS (mTLS) authentication.
-     # Datadog's control plane and query service authenticate themselves using client certificates,
-     # ensuring that only authorized Datadog services can access CloudPrem nodes through the public ingress.
-     public:
-       enabled: true
-       name: cloudprem-public
-       host: cloudprem.acme.corp
-       extraAnnotations:
-         alb.ingress.kubernetes.io/load-balancer-name: cloudprem-public
-
      # The internal ingress is used by Datadog Agents and other collectors running outside
      # the Kubernetes cluster to send their logs to CloudPrem.
      internal:
